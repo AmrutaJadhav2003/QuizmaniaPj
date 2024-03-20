@@ -1,0 +1,218 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuizMania</title>
+    <!-- Load static CSS files -->
+    <link rel="stylesheet" href="{% static 'app/style.css' %}">
+    <link rel="stylesheet" href="{% static 'app/bar-graph.css' %}">
+    
+    <style>
+        /* Thumbnail */
+        .thumbnail {
+            position: relative;
+            width: 1456px;
+            height: 770px;
+            background: url('https://s3-alpha-sig.figma.com/img/f7f6/240e/9d42a2ef9dff06fa1714dd173eb790a3?Expires=1708905600&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=Ps1CQpYGP1NeS8w2XLnODXC7gh95dfNPwhwh8fiLckiRlNSQMQvkGb8iSQXehi2pUXb0O6AeJ2M2dqU-OyJ69D164cmmcWUSKN91fOsoipN3~EcMaFggI1xux0lJ2AhytaxoORg4V-E~pdf889PjBvV~fQcZVBhkUWhq~Unck4cOM9GYmnuoJZzkDEShuj~OQmMPW6iBpL5Zu~m6pEF015bWC~4VgO0zSohoXSmIaceKlKD9awPEPoyK44mfU7wzuUZyMQ11FboKayp5N61j6gIaHkyGw~UBN8nX0NMGm7~NUQCDU-ItH07~sUQL0ePFs6wrSQ~S0lc479RBo58Aqw__') no-repeat center center fixed;
+            background-size: cover;
+            background-color: rgba(255, 255, 255, 0);
+            overflow: hidden;
+        }
+        .user-info {
+    position: fixed;
+    top: 10px;
+    right: 20px;
+    color: #F4F3F6;
+}
+        /* Background Image */
+        .background-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://s3-alpha-sig.figma.com/img/f7f6/240e/9d42a2ef9dff06fa1714dd173eb790a3?Expires=1708905600&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=Ps1CQpYGP1NeS8w2XLnODXC7gh95dfNPwhwh8fiLckiRlNSQMQvkGb8iSQXehi2pUXb0O6AeJ2M2dqU-OyJ69D164cmmcWUSKN91fOsoipN3~EcMaFggI1xux0lJ2AhytaxoORg4V-E~pdf889PjBvV~fQcZVBhkUWhq~Unck4cOM9GYmnuoJZzkDEShuj~OQmMPW6iBpL5Zu~m6pEF015bWC~4VgO0zSohoXSmIaceKlKD9awPEPoyK44mfU7wzuUZyMQ11FboKayp5N61j6gIaHkyGw~UBN8nX0NMGm7~NUQCDU-ItH07~sUQL0ePFs6wrSQ~S0lc479RBo58Aqw__') no-repeat center center fixed;
+            background-size: cover;
+            z-index: -1; /* Behind other elements */
+        }
+
+        /* Remaining styles from the first code snippet */
+        .group11 {
+            position: absolute;
+            width: 468px;
+            height: 60.79px;
+            left: 166px;
+            top: 241px;
+        }
+
+        .group15 {
+            position: absolute;
+            width: 468px;
+            height: 60.79px;
+            left: 166px;
+            top: 241px;
+        }
+
+        .rectangle2 {
+            position: absolute;
+            width: 468px;
+            height: 4px;
+            left: 166px;
+            top: 297.79px;
+            background: linear-gradient(96.52deg,  #45a049 9.19%, rgba(146, 227, 169, 0) 49.57%);
+            border-radius: 15.0565px;
+        }
+
+        .group14 {
+            position: absolute;
+            width: 157px;
+            height: 43px;
+            left: 166px;
+            top: 241px;
+        }
+
+        .group12 {
+            position: absolute;
+            width: 157px;
+            height: 43px;
+            left: 166px;
+            top: 241px;
+        }
+
+        .group13 {
+            position: absolute;
+            width: 157px;
+            height: 43px;
+            left: 166px;
+            top: 241px;
+        }
+
+        .rectangle3 {
+            position: absolute;
+            width: 157px;
+            height: 43px;
+            left: 166px;
+            top: 241px;
+            background:  #45a049;
+            border-radius: 7.52825px;
+        }
+
+        .quizMania {
+            position: absolute;
+            width: 120px;
+            height: 36px;
+            left: 187px;
+            top: 244px;
+            font-family: 'ABeeZee';
+            font-style: italic;
+            font-weight: 400;
+            font-size: 23.5378px;
+            line-height: 36px;
+            color: #F4F3F6;
+        }
+
+        .statistics {
+    position: absolute;
+    width: 1359.97px; /* Adjust width as needed */
+    height: 100.42px; /* Adjust height as needed */
+    top: 518.4px; /* Adjust top position as needed */
+    left: 133.21px; /* Adjust left position as needed */
+    /* background: #45C486; */
+    /* overflow: hidden; */
+    /* z-index: 1;  */
+}
+
+
+        /* Add more styles as needed */
+
+        /* Start Now Button */
+        .startNow {
+            position: absolute;
+            width: 181px;
+            height: 57px;
+            top: 319px;
+            left: 166px;
+            border-radius: 8px;
+            /* top: 339.2px; */
+            font-family: 'ABeeZee';
+            font-style: italic;
+            font-weight: 400;
+            font-size: 16px;
+            line-height: 20px;
+            color: #F4F3F6;
+            background:  #45a049;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .startNow:hover {
+            background:  #45a049;
+        }
+
+
+    .rectangle4 {
+    position: absolute;
+    width: 11px; /* Adjust width as needed */
+    height: 268px; /* Adjust height as needed */
+    left: 0; /* Adjust left position as needed */
+    top: 0; /* Adjust top position as needed */
+    background:  #45a049;
+    z-index: 1; /* Make sure it's above the background image */
+}
+
+.ellipse2 {
+    position: absolute;
+    width: 7px;
+    height: 7px;
+    top: 183px; /* Adjust top position as needed */
+    left: 154px; /* Adjust left position as needed */
+    background:   #45a049;
+
+    z-index: 2; /* Ensure it's above the background image */
+}
+
+
+
+
+    </style>
+</head>
+<body>
+    <div class="user-info">
+        {% if user.is_authenticated %}
+            <p>Welcome, {{ user.username }}!</p>
+        {% else %}
+            <p>Guest</p>
+        {% endif %}
+    </div>
+    <div class="thumbnail">
+        <!-- <div class="background-image"></div> -->
+        <div class="rectangle"></div>
+        <div class="rectangle"></div>
+        <div class="group11"></div>
+        <div class="group15"></div>
+        <div class="rectangle2"></div>
+        <div class="group14"></div>
+        <div class="group12"></div>
+        <div class="group13"></div>
+        <div class="rectangle3"></div>
+        <div class="quizMania">QuizMania</div>
+        <div class="statistics">
+            <img src="{% static 'images/statistics.png' %}" alt="Statistics Image" class="statistics-image">
+        </div>
+        <div class="ellipse2"></div>
+        <div class="rectangle4"></div>
+        <div class="group7"></div>
+        <div class="rectangle1"></div>
+        <a href="{% url 'next_page' %}" class="startNow">Start Now</a>
+        <div class="background-image"></div>
+    </div>
+
+    <!-- Load static JavaScript file -->
+    <script src="{% static 'app/script.js' %}"></script>
+</body>
+</html>

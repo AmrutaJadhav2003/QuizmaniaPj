@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz</title>
+    <style>
+        body {
+            background-color: #EDE8E3;
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+        }
+
+        #user-info {
+            position: fixed;
+            top: 10px;
+            right: 20px;
+            font-size: 18px;
+            color: #333;
+        }
+
+        #timer-container {
+            position: fixed;
+            top: 60px; /* Adjusted top position to prevent overlap with user info */
+            right: 20px;
+            background-color: #fff;
+            padding: 10px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+        }
+
+        #timer {
+            font-size: 20px;
+            color: #45a049;
+            margin-left: 10px;
+        }
+
+        .question {
+            display: none;
+            position: absolute;
+            top: 32%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            width: 400px;
+            border: none;
+            padding: 20px;
+            border-radius: 8px;
+            background-color: inherit;
+            margin-bottom: 20px;
+        }
+
+        .question h2 {
+            margin-bottom: 10px;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .options label {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            padding: 20px;
+            border-radius: 8px;
+            background-color: #F4F3F6;
+            font-family: ABeeZee;
+            font-size: 20px;
+            font-style: italic;
+            font-weight: 400;
+            line-height: 27px;
+            letter-spacing: 0em;
+            text-align: left;
+        }
+
+        .options input[type="radio"] {
+            margin-right: 10px;
+        }
+
+        .correct-symbol {
+            color: #45a049;
+            margin-right: 5px;
+            font-size: 20px;
+        }
+
+        .options input[type="radio"] {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+        }
+
+        .custom-radio {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #000;
+            border-radius: 50%;
+            margin-right: 10px;
+            position: relative;
+        }
+
+        .custom-radio::after {
+            content: '';
+            width: 10px;
+            height: 10px;
+            background-color: #000;
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: none;
+        }
+
+        .custom-radio input[type="radio"]:checked + .custom-radio::after {
+            display: block;
+        }
+
+        button {
+            padding: 10px 20px;
+            margin: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            display: inline-block;
+            width: 240px;
+            height: 60px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        #buttons {
+            position: absolute;
+            top: calc(50% + 90px);
+            left: 50%;
+            transform: translateX(-50%);
+            display: inline-block;
+        }
+
+        #progress-bar {
+            width: 300px;
+            margin: 360px 90px 20px auto;
+            background-color: #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+            bottom: 0%;
+            margin-right: 500px;
+            top: calc(50% + 90px);
+            display: inline-block;
+            height: 20px;
+        }
+
+        #progress-bar-fill {
+            height: 20px;
+            background-color: #4CAF50;
+            transition: width 0.3s ease;
+        }
+
+        #progress-text {
+            position: absolute;
+            font-size: 14px;
+            color: #666;
+            overflow: hidden;
+            width: 300px;
+            margin: 360px 90px 20px auto;
+            height: 20px;
+            margin-right: 800px;
+            top: calc(10% + 20px);
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+    <div id="user-info">
+        {% if user.is_authenticated %}
+            <p>Welcome, {{ user.username }}!</p>
+        {% else %}
+            <p>Guest</p>
+        {% endif %}
+    </div>
+
+    <div id="timer-container">
+        <div id="timer">Time Remaining: <span id="time-display">02:00</span></div>
+    </div>
+
+    <h1>Quiz</h1>
+    <form id="quiz-form" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="user" value="{{ user.username }}">
+        {% for question in questions %}
+            <div class="question" id="question{{ question.id }}">
+                <h2>{{ question.question }}</h2>
+                <div class="options">
+                    <label>
+                        <input type="radio" name="answer{{ question.id }}" value="A">
+                        <span class="radio-symbol"></span> A. {{ question.option_a }}
+                    </label><br>
+                    <label>
+                        <input type="radio" name="answer{{ question.id }}" value="B">
+                        <span class="radio-symbol"></span> B. {{ question.option_b }}
+                    </label><br>
+                    <label>
+                        <input type="radio" name="answer{{ question.id }}" value="C">
+                        <span class="radio-symbol"></span> C. {{ question.option_c }}
+                    </label><br>
+                    <label>
+                        <input type="radio" name="answer{{ question.id }}" value="D">
+                        <span class="correct-symbol"></span> D. {{ question.option_d }}
+                    </label><br>
+                </div>
+            </div>
+                </div>
+            </div>
+        {% endfor %}
+        <div id="buttons">
+            <button id="next-btn" type="button">Continue</button>
+            <button id="submit-btn" type="button" style="display: none;">Finish</button>
+        </div>
+
+        <div id="progress-bar">
+            <div id="progress-bar-fill" style="width: 0;"></div>
+            <div id="progress-text">0/{{ totalQuestions }}</div>
+        </div>
+    </form>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+              $.ajaxSetup({
+            beforeSend: function(xhr, settings) {
+                if (!(/^http:.*/.test(settings.url) || /^https:.*/.test(settings.url))) {
+                    xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
+                }
+            }
+        });
+
+        $(document).ready(function() {
+            var currentQuestion = 1;
+            var totalQuestions = parseInt("{{ questions|length }}");
+            var progressBarFillWidth = (currentQuestion - 1) / totalQuestions * 100;
+            var quizTimeInSeconds = 120;
+            var timeRemaining = quizTimeInSeconds;
+
+            $('#question1').show();
+            $('#next-btn').prop('disabled', true);
+            $('#submit-btn').hide();
+            $('#progress-bar-fill').css('width', progressBarFillWidth + '%');
+
+            function showButton() {
+                if (currentQuestion < totalQuestions) {
+                    $('#next-btn').show();
+                    $('#submit-btn').hide();
+                } else {
+                    $('#next-btn').hide();
+                    $('#submit-btn').show();
+                }
+            }
+
+            $('input[type=radio]').change(function() {
+                $('#next-btn').prop('disabled', false);
+                updateProgressBar();
+            });
+
+            function updateProgressBar() {
+                var progressBarFillWidth = currentQuestion / totalQuestions * 100;
+                $('#progress-bar-fill').css('width', progressBarFillWidth + '%');
+                $('#progress-text').text(currentQuestion + '/' + totalQuestions);
+            }
+
+            var timerInterval = setInterval(function() {
+                if (timeRemaining > 0) {
+                    var minutes = Math.floor(timeRemaining / 60);
+                    var seconds = timeRemaining % 60;
+                    $('#time-display').text((minutes < 10 ? '0' : '') + minutes + ':' + (seconds < 10 ? '0' : '') + seconds);
+                    timeRemaining--;
+                } else {
+                    clearInterval(timerInterval);
+                    submitQuiz();
+                }
+            }, 1000);
+
+            function submitQuiz() {
+                var formData = $('#quiz-form').serialize();
+                $.ajax({
+                    type: 'POST',
+                    url: '/submit-quiz/',
+                    data: formData,
+                    success: function(response) {
+                        window.location.href = '/quiz-completed/';
+                    },
+                    error: function(xhr, status, error) {
+                        console.error(error);
+                        alert('An error occurred while submitting the quiz. Please try again later.');
+                    }
+                });
+            }
+
+            $('input[type="radio"]').click(function() {
+                $('.options label').removeClass('selected');
+                $('.correct-symbol').remove();
+                $('.options label').css('background-color', '');
+
+                if ($(this).is(':checked')) {
+                    $(this).closest('label').addClass('selected');
+                    $(this).siblings('.radio-symbol').after('<span class="correct-symbol">&#10004;</span>');
+                    $(this).closest('label').css('background-color', '#45C486');
+                }
+            });
+
+            $('#next-btn').click(function() {
+                $('#question' + currentQuestion).hide();
+                currentQuestion++;
+                $('#question' + currentQuestion).show();
+                $('#next-btn').prop('disabled', true);
+                showButton();
+            });
+
+            $('#submit-btn').click(function() {
+                submitQuiz();
+            });
+        });
+    </script>
+</body>
+</html>
